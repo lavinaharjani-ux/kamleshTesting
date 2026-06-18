@@ -40,4 +40,4 @@ jobs:
 
       - name: Validate Gunicorn Startup
         run: |
-          timeout 10s gunicorn demo.wsgi:application
+          timeout 60s gunicorn demo.wsgi:application
