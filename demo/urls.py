@@ -19,7 +19,7 @@ from django.urls import path , include
 
 from django.http import JsonResponse
 
-def worker_api(request):
+def worker_ap(request):
     data = {
         "status": True,
         "message": "Worker API is working successfully",
@@ -29,5 +29,5 @@ def worker_api(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', worker_api, name='worker_api'),
+    path('api/', worker_ap, name='worker_api'),
 ]
