@@ -2,12 +2,15 @@ name: Django CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   test:
+    name: Django CI Pipeline
     runs-on: ubuntu-latest
 
     env:
@@ -15,29 +18,39 @@ jobs:
       DEBUG: "False"
 
     steps:
-      - name: Checkout Code
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: 🐍 Setup Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Django Check
-        run: python manage.py check
-
-      - name: Check Pending Migrations
-        run: python manage.py makemigrations --check --dry-run
-
-      - name: Run Migrations
-        run: python manage.py migrate
-
-      - name: Run Tests
-        run: python manage.py test
-
-      - name: Validate Gunicorn Startup
+      - name: 📦 Install Dependencies
         run: |
-          timeout 60s gunicorn demo.wsgi:application
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🔍 Django System Check
+        run: |
+          python manage.py check
+
+      - name: 📝 Check Pending Migrations
+        run: |
+          python manage.py makemigrations --check --dry-run
+
+      - name: 🗄️ Apply Migrations
+        run: |
+          python manage.py migrate --noinput
+
+      - name: 🧪 Run Tests
+        run: |
+          python manage.py test
+
+      - name: 🚀 Validate WSGI Import
+        run: |
+          python -c "from demo.wsgi import application; print('WSGI import successful')"
+
+      - name: ✅ CI Pipeline Passed
+        run: |
+          echo "All checks passed successfully!"
