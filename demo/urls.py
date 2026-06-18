@@ -30,4 +30,5 @@ def worker_ap(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', worker_ap, name='worker_api'),
+    path('api1/', worker_ap, name='worker_api'),
 ]
