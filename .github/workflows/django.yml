@@ -10,13 +10,34 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+    env:
+      SECRET_KEY: test-secret-key
+      DEBUG: "False"
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - run: pip install -r requirements.txt
-      - run: python manage.py check
-      - run: python manage.py test
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Django Check
+        run: python manage.py check
+
+      - name: Check Pending Migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Run Migrations
+        run: python manage.py migrate
+
+      - name: Run Tests
+        run: python manage.py test
+
+      - name: Validate Gunicorn Startup
+        run: |
+          timeout 10s gunicorn demo.wsgi:application
